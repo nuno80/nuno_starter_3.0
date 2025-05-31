@@ -99,7 +99,6 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             onClick={toggleMenu}
-
             aria-label="Toggle Menu"
           >
             {isMenuOpen ? (
@@ -111,8 +110,6 @@ export function Navbar() {
           <SignedIn>
             <UserButton />
           </SignedIn>
-
-
         </div>
       </div>
 

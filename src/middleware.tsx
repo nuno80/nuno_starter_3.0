@@ -1,5 +1,6 @@
 // middleware.ts (o src/middleware.ts)
 import { NextResponse } from "next/server";
+
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 // Definisci le rotte che devono essere sempre accessibili, anche senza autenticazione
@@ -15,7 +16,11 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 // Definisci le rotte che richiedono il ruolo 'admin'
-const isAdminRoute = createRouteMatcher(["/dashboard(.*)"]);
+const isAdminRoute = createRouteMatcher([
+  "/dashboard(.*)", // Mantieni se usi /dashboard per admin
+  "/admin(.*)", // Protegge /admin, /admin/users, ecc.
+  "/api/admin(.*)", // Protegge /api/admin/get-users, /api/admin/set-user-role, ecc.
+]);
 
 // Definisci le rotte che richiedono semplicemente l'autenticazione
 const isAuthenticatedRoute = createRouteMatcher(["/features(.*)"]);
@@ -40,7 +45,7 @@ export default clerkMiddleware(async (auth, req) => {
       );
       return NextResponse.redirect(authRequiredUrl);
     }
-    
+
     // Per altre rotte non pubbliche, lascia che Clerk gestisca la redirezione
     console.log(
       `Unauthenticated user trying to access ${req.url}. Redirecting via Clerk.`
