@@ -1,12 +1,11 @@
 # Docker/docker-compose.yml
-# version: '3.8' # Rimuovi questa riga come da avviso Docker
 
 services:
-  fantacalcio-app:
+  app:
     build:
       context: .. # Root del progetto (fantavega/)
       dockerfile: Docker/Dockerfile # Percorso al Dockerfile
-    container_name: fantacalcio_nextjs_dev
+    container_name: nuno_next_starter_2_dev
     ports:
       - "3000:3000"
     volumes:
