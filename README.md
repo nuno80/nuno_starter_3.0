@@ -1,347 +1,308 @@
-```markdown
 # Nuno's Next.js Starter Kit 2.0
 
 A comprehensive Next.js 15 starter kit designed to accelerate the setup process for new web applications. It provides a pre-configured environment with Docker for development, pnpm, TypeScript, Tailwind CSS, shadcn/ui (base), BetterSQLite for local database, and Clerk for authentication.
 
+---
+
+## 🚀 Quickstart Guide
+
+1. **Clone & Install:**
+
+   ```bash
+   git clone https://github.com/nuno80/nuno-starter-kit-2.0.git my-new-app # Replace with your repo URL if different
+   cd my-new-app
+   pnpm install
+   pnpm add -D tsx # Ensure tsx is available for DB scripts
+   ```
+
+2. **Environment Variables:**
+   Copy `.env.local.example` to `.env.local` (if `example` file exists, otherwise create `.env.local` manually).
+
+   ```bash
+   # cp .env.local.example .env.local
+   ```
+
+   Fill in your Clerk keys in `.env.local`:
+
+   ```env
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_YOUR_KEY
+   CLERK_SECRET_KEY=sk_test_YOUR_KEY
+   ```
+
+3. **Initialize Database:**
+   Define your initial table structure in `database/schema.sql`, then run:
+
+   ```bash
+   pnpm run db:migrate
+   ```
+
+4. **Run Development Server:**
+
+   - With Docker (Recommended for a consistent environment)\*\*
+     First, ensure Docker Desktop is running. Then, from your project root directory:
+
+     ```bash
+     # Navigate into the Docker directory
+     cd Docker
+
+     # Build the Docker image (run this for the first time, or after Dockerfile/config changes)
+     docker compose build --no-cache app
+
+     # Start the application using Docker Compose
+     docker compose up
+     ```
+
+     The application will be available at `http://localhost:3000`. (See the "Running with Docker" section below for more details on detached mode and logs).
+
 ## Table of Contents
 
+- [Quickstart Guide](#-quickstart-guide)
 - [Project Purpose](#project-purpose)
 - [Technology Stack](#technology-stack)
-- [Key Features Added/Configured](#key-features-addedconfigured)
+- [Key Features](#key-features)
 - [Directory Structure](#directory-structure)
-- [Local Development Setup](#local-development-setup)
+- [Development Setup](#development-setup)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-  - [Environment Variables](#environment-variables)
-  - [Running the Development Server (Local Machine)](#running-the-development-server-local-machine)
-  - [Running with Docker (Recommended for Consistent Environment)](#running-with-docker-recommended-for-consistent-environment)
-- [Database](#database)
+  - [Environment Variables](#environment-variables-1)
+  - [Database Management](#database-management)
+  - [Running Locally](#running-locally)
+  - [Running with Docker](#running-with-docker)
 - [Authentication (Clerk)](#authentication-clerk)
-  - [Access Control Pages](#access-control-pages)
-  - [Route Protection](#route-protection)
 - [Code Quality & Formatting](#code-quality--formatting)
 - [GitHub Workflow (CI)](#github-workflow-ci)
-- [Starting a New Project from this Starter Kit](#starting-a-new-project-from-this-starter-kit)
+- [Using as a Starter for New Projects](#using-as-a-starter-for-new-projects)
 - [Resources](#resources)
 
 ## Project Purpose
 
 This project serves as a robust foundation for building modern web applications using Next.js. It aims to:
 
-- Streamline the initial project setup.
+- Streamline initial project setup.
 - Provide a pre-configured, Dockerized development environment.
 - Integrate essential tools for styling, data management, and authentication.
 - Emphasize code quality through linting, formatting, and TypeScript.
 - Include a basic CI workflow for GitHub Actions.
 
-This starter kit uses **Clerk** for authentication and **BetterSQLite** (via `better-sqlite3`) for local database management, suitable for rapid development and prototyping before potentially moving to a more complex database православ.
+This starter kit uses **Clerk** for authentication and **BetterSQLite** (via `better-sqlite3`) for local database management.
 
 ## Technology Stack
 
-### Core & Development Environment
+### Core & Development
 
-- **Next.js 15**: React framework with App Router.
-- **TypeScript**: Typed superset of JavaScript.
-- **pnpm**: Fast, disk space-efficient package manager.
-- **Docker & Docker Compose**: For containerized development environment.
+- **Next.js 15** (App Router)
+- **TypeScript**
+- **pnpm**
+- **Docker & Docker Compose**
 
 ### Styling & UI
 
-- **Tailwind CSS**: Utility-first CSS framework.
-- **shadcn/ui (Base)**: (Assumed, as `components.json` and theme variables are present). Provides a base for theming and UI components. You'll add components via `pnpm dlx shadcn-ui@latest add ...`.
-- **next-themes**: For theme management (dark/light mode).
-- **lucide-react**: Icon library.
+- **Tailwind CSS**
+- **shadcn/ui (Base)** (Setup for theming, add components via `pnpm dlx shadcn-ui@latest add ...`)
+- **next-themes** (Dark/Light mode)
+- **lucide-react** (Icons)
 
 ### Database
 
-- **SQLite**: Embedded SQL database engine.
-- **better-sqlite3**: Node.js binding for SQLite3.
-- **(Future Consideration: Drizzle ORM)**: While `drizzle-kit` and `drizzle-orm` might be in `package.json` from the original starter, this version focuses on `better-sqlite3` for direct SQLite interaction. ORM integration can be a next step.
+- **SQLite** (via `better-sqlite3`)
 
 ### Authentication
 
-- **Clerk (@clerk/nextjs)**: User management and authentication platform.
+- **Clerk** (`@clerk/nextjs`)
 
-### Code Quality & Formatting
+### Code Quality
 
-- **ESLint**: JavaScript/TypeScript linter.
-  - Configured with `next/core-web-vitals`, `next/typescript`.
-  - `eslint-plugin-check-file` for naming conventions.
-- **Prettier**: Opinionated code formatter.
-  - Configured with `@trivago/prettier-plugin-sort-imports` and `prettier-plugin-tailwindcss`.
+- **ESLint** (with `next/core-web-vitals`, `next/typescript`)
+- **Prettier** (with import sorting and Tailwind class sorting)
+- `eslint-plugin-check-file` (Naming conventions)
 
-### Environment Variables
+_(Note: The original starter kit from which this was derived included other libraries like NextUI, Drizzle, NextAuth, etc. This version has been streamlined to focus on the stack listed above. You can integrate other tools as needed.)_
 
-- **Next.js built-in support for `.env.local` files.** (The original starter mentioned `dotenv`, `dotenv-expand`, `@t3-oss/env-nextjs`, `cross-env`. These might still be in `package.json` but Next.js's native handling is primary for this setup).
+## Key Features
 
-## Key Features Added/Configured in this Version
-
-- **Dockerized Development Environment**: Pre-configured `Dockerfile` and `docker-compose.yml` for a consistent development setup using `pnpm`.
-- **BetterSQLite Integration**: Setup for local SQLite database using `better-sqlite3`, including automatic database file creation and schema application from `database/schema.sql`.
-- **pnpm Setup**: Project configured to use `pnpm` as the package manager.
-- **Clerk Authentication Base**: Core Clerk setup for user authentication and route protection via middleware.
-- **Path Aliases (`@/*`)**: Configured in `tsconfig.json` and `next.config.mjs` for cleaner imports.
-- **Tailwind CSS Theming**: Base theming variables (light/dark mode) set up in `globals.css`, typical of shadcn/ui.
+- Dockerized Development Environment.
+- BetterSQLite Integration with manual schema migration.
+- pnpm for package management.
+- Clerk Authentication base setup.
+- Path Aliases (`@/*`) configured.
+- Tailwind CSS Theming base.
 
 ## Directory Structure
+
 ```
 
 nuno-starter-kit-2.0/
-├── Docker/ # Docker configuration
-│ ├── Dockerfile
-│ └── docker-compose.yml
-├── database/ # Database related files
-│ ├── schema.sql # SQL schema definition (run on first DB creation)
-│ └── .gitkeep # Ensures a_s_directory is versioned
+├── Docker/ # Docker configuration (Dockerfile, docker-compose.yml)
+├── database/ # Database files (schema.sql, .gitkeep; .db file is gitignored)
 ├── public/ # Static assets
-│ └── ...
-├── src/ # Main application source code
-│ ├── app/ # App Router (pages, layouts, API routes)
-│ │ ├── (auth)/ # Route group for auth pages (e.g., sign-in, sign-up provided by Clerk)
-│ │ ├── admin/ # Admin-specific routes
-│ │ │ └── users/ # Example admin page
-│ │ ├── api/
-│ │ │ └── admin/ # Admin-specific API routes
-│ │ ├── dashboard/ # Example admin dashboard (protected by middleware)
-│ │ ├── devi-autenticarti/ # Page for unauthenticated access attempts
-│ │ ├── features/ # Example authenticated route
-│ │ ├── no-access/ # Page for unauthorized access attempts
-│ │ ├── user-dashboard/ # Example user-specific dashboard
-│ │ ├── layout.tsx # Root layout
-│ │ └── page.tsx # Root page (homepage)
-│ ├── components/ # Reusable React components
-│ │ ├── navbar.tsx # Example Navbar component
-│ │ └── theme-provider.tsx # Component for next-themes
-│ │ └── ui/ # Typically for shadcn/ui components (add as needed)
-│ ├── lib/ # Utility functions, helpers
-│ │ └── db/
-│ │ └── index.ts # Database connection utility (BetterSQLite)
-│ └── types/ # TypeScript type definitions
-├── .dockerignore # Files to ignore for Docker context
-├── .env.local.example # Example environment variables (rename to .env.local)
-├── .eslintrc.json # ESLint configuration
-├── .gitignore # Files ignored by Git
-├── .prettierrc.json # Prettier configuration
-├── components.json # shadcn/ui configuration (if used)
-├── next.config.mjs # Next.js configuration
-├── package.json # Project dependencies and scripts
-├── pnpm-lock.yaml # pnpm lock file
-├── postcss.config.mjs # PostCSS configuration
-├── README.md # This file
-├── tailwind.config.ts # Tailwind CSS configuration
-└── tsconfig.json # TypeScript configuration
+├── src/ # Application source code
+│ ├── app/ # Next.js App Router
+│ ├── components/ # Reusable React components (ui/ for shadcn)
+│ ├── lib/ # Core libraries (db connection in lib/db/index.ts)
+│ ├── db/ # Database scripts (migrate.ts, reset.ts, utils.ts)
+│ └── types/ # TypeScript definitions
+├── .dockerignore
+├── .env.local.example # Example environment variables
+├── .eslintrc.json
+├── .gitignore
+├── .prettierrc.json
+├── components.json # shadcn/ui config
+├── next.config.mjs
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.mjs
+├── tailwind.config.ts
+└── tsconfig.json
 
-````
-
-## Local Development Setup
-
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18.x or later recommended, as used in Dockerfile)
-- [pnpm](https://pnpm.io/installation)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for Dockerized development)
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/nuno80/nuno-starter-kit-2.0.git # Replace with your repo URL
-   cd nuno-starter-kit-2.0
-````
-
-2. Install dependencies:
-
-   ```bash
-   pnpm install
-   ```
-
-   bun e npm danno problemi, usa pnpm
-
-### Environment Variables
-
-1. Create a `.env.local` file in the root of the project by copying `.env.local.example` (if you create one) or by creating it manually.
-
-   ```bash
-   cp .env.local.example .env.local # If .env.local.example exists
-   ```
-
-2. Populate `.env.local` with your Clerk keys and other necessary variables:
-
-   ```env
-    # Clerk Environment Variables - Get these from your Clerk Dashboard
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_YOUR_PUBLISHABLE_KEY_HERE
-    CLERK_SECRET_KEY=sk_test_YOUR_SECRET_KEY_HERE
-
-    # Optional: Override default Clerk redirect URLs if needed
-    # NEXT_PUBLIC_CLERK_SIGN_IN_URL=/custom-sign-in
-    # NEXT_PUBLIC_CLERK_SIGN_UP_URL=/custom-sign-up
-    # NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/my-dashboard
-    # NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/welcome
-
-    # Optional: Application URL
-    # NEXT_PUBLIC_APP_URL=http://localhost:3000
-   ```
-
-   **Important:** Get your Clerk keys from the [Clerk Dashboard](https://dashboard.clerk.com/).
-
-### Running the Development Server (Local Machine)
-
-```bash
-pnpm run dev
 ```
 
-The application will be available at `http://localhost:3000`. The SQLite database file (`starter_default.db`) and `schema.sql` (if present) will be used/created in the `database/` directory.
+## Development Setup
 
-### Running with Docker (Recommended for Consistent Environment)
+### Prerequisites
 
-This starter kit includes a Docker setup to provide a consistent and isolated development environment.
+- [Node.js](https://nodejs.org/) (be sure to update to v20.x to be aligned with Dockerfile)
+- [pnpm](https://pnpm.io/installation)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-1. **Ensure Docker Desktop is running.**
+### Installation
 
-2. **Navigate to the `Docker/` directory** within your project root:
-
-   ```bash
-   cd Docker
-   ```
-
-   _(Alternatively, you can run `docker compose` commands from the project root by specifying the path to the compose file, e.g., `docker compose -f Docker/docker-compose.yml ...`)_
-
-3. **Build the Docker image(s):**
-   This step is crucial for the first time or if you've made changes to the `Dockerfile`, `package.json`, or other configuration files copied during the image build process. Using `--no-cache` ensures a clean build, ignoring any previous Docker layer cache.
+1. **Clone the repository:**
 
    ```bash
-   docker compose build --no-cache app
+   git clone https://github.com/nuno80/nuno-starter-kit-2.0.git my-app
+   cd my-app
    ```
 
-4. **Run the application using Docker Compose:**
-   This will start the service(s) defined in your `docker-compose.yml` (in this case, the `app` service).
+2. **Choose Your Development Approach:**
 
-   ```bash
-   docker compose up
-   ```
+   - **Option A: Docker-Only Development (Recommended for consistency)**
+     If you plan to develop exclusively within the Docker environment, you **do not need to run `pnpm install` on your local machine (WSL).** Docker will handle dependency installation. Proceed to "Environment Variables" and then to the "Running with Docker" section. The database migration script will also be run inside the Docker container.
 
-   Usa questo comando se prevedi una fase di sviluppo molto interattiva.
+   - **Option B: Local Development (or Hybrid with Docker)**
+     If you want to run `pnpm run dev` directly on your local machine (WSL) or need local `node_modules` for IDE tooling:
 
-   - è anche possibile eseguire 'docker compose up -d'. Quando esegui docker compose up -d, Docker Compose avvia i container e poi restituisce immediatamente il controllo al tuo terminale. I container continuano a girare in background.. Richiede un comando separato (docker compose logs -f app) per vedere i log.
-   - You will see the application logs directly in your terminal.
-   - The application will be available at `http://localhost:3000`.
+     1. **Align Your Local Node.js Version (v20.x Recommended):**
+        (Mantieni le istruzioni per nvm e il warning sul lockfile come prima)
 
-5. **Hot Reloading (Live Code Changes):**
+        ```bash
+        # Example using nvm:
+        nvm install 20
+        nvm use 20
+        ```
 
-   - **Changes to your code in the `src/` directory (and `public/` directory) on your local machine should be visible immediately in your browser at `http://localhost:3000`**, similar to when using `pnpm run dev` directly.
-   - This is because the `docker-compose.yml` file is configured to use **volumes** (`- ../src:/app/src` and `- ../public:/app/public`). These volumes map your local `src/` and `public/` directories into the `/app/src/` and `/app/public/` directories inside the running Docker container.
-   - When you save a file in `src/` locally, Next.js (running inside the container) detects the change via this mounted volume and triggers its hot-reloading mechanism, updating your browser automatically.
-   - **Note:** If hot-reloading seems sluggish or doesn't work reliably on your system, you might need to enable polling by uncommenting `CHOKIDAR_USEPOLLING: "true"` or `WATCHPACK_POLLING: "true"` in the `environment` section of your `docker-compose.yml` file.
+     2. **Install Dependencies Locally:**
 
-6. **Viewing Logs (if running in detached mode):**
-   If you start the containers in detached (background) mode using `docker compose up -d`, you can view and follow the logs with:
+        ```bash
+        pnpm install
+        pnpm add -D tsx # Ensures tsx is available for local DB scripts
+        ```
 
-   ```bash
-   docker compose logs -f app
-   ```
+        ⚠️ **Warning:** Ensure your local Node.js version matches the project's target (v20.x) to keep `pnpm-lock.yaml` consistent with the Docker environment. If you use a different Node version and regenerate `pnpm-lock.yaml`, it might cause issues with the Docker build
 
-7. **Stopping and Removing the Containers:**
-   When you are done working or want to stop the application:
+3. **Set up Environment Variables:**
 
-   - If `docker compose up` is running in your terminal, press `Ctrl+C` in that terminal.
-   - To stop and remove the containers, network, and volumes defined in `docker-compose.yml` (if you ran in detached mode or from another terminal):
+   1. Create a `.env.local` file in the project root (you can copy `.env.local.example` if it exists).
+   2. Add your Clerk keys:
+
+      ```env
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_YOUR_CLERK_PUBLISHABLE_KEY
+      CLERK_SECRET_KEY=sk_test_YOUR_CLERK_SECRET_KEY
+      # Optional: NEXT_PUBLIC_APP_URL=http://localhost:3000
+      # Optional: Clerk redirect URLs (can also be set in Clerk Dashboard)
+      ```
+
+      Get keys from the [Clerk Dashboard](https://dashboard.clerk.com/).
+
+4. **Initialize the Database Schema:**
+
+   - **If using Docker-Only Development:** You will run the migration script _inside_ the Docker container after it's up and running for the first time:
 
      ```bash
-     docker compose down
+     # After 'docker compose up -d'
+     docker compose exec app pnpm run db:migrate
      ```
 
-     Using `docker compose down -v` will also remove any named volumes anonymous (though we don't explicitly define named volumes for the app code in this setup, it's a good practice for a full cleanup if needed).
-
-8. **Docker Image Optimization**: For guidance on creating a production-optimized, smaller Docker image from this starter, refer to the [Docker Image Optimization Guide](./guida_ottimizzazione_docker.md).
-
-The `database/` directory from your host machine is also mounted into the container, so your SQLite database will persist across container restarts.
-
-## Database (SQLite via BetterSQLite3)
-
-This starter kit is configured to use **SQLite** as its local database, accessed directly via the `better-sqlite3` library for simplicity and speed in development. The database schema is managed manually through an SQL file and a migration script.
-
-### How the Database is Managed & Initialized
-
-1. **Database File Location:**
-
-   - The SQLite database file will be created in the `database/` directory at the root of your project when the application first connects to it or when you run the migration script.
-   - The default name for the database file is `starter_default.db` (as configured in `src/lib/db/index.ts`).
-   - **Important:** Ensure the database file (`starter_default.db` and its auxiliary files like `-shm`, `-wal`) **ARE LISTED** in your `.gitignore` file. These files **should not be committed** to version control.
-
-2. **Schema Definition (`database/schema.sql`):**
-
-   - A crucial file named `schema.sql` is located in the `database/` directory.
-   - **This is where you MUST define your database tables, indexes, and other schema elements using SQL DDL (Data Definition Language) statements.** For example, `CREATE TABLE IF NOT EXISTS ...`.
-
-3. **Manual Schema Application (Migration Script):**
-
-   - Unlike some setups, this starter kit requires you to **manually apply the database schema** using a provided script.
-   - After cloning the project and installing dependencies, you need to run:
+   - **If using Local Development:**
 
      ```bash
      pnpm run db:migrate
      ```
 
-   - This command executes the `src/db/migrate.ts` script, which reads `database/schema.sql` and applies it to your `starter_default.db` (creating the file if it doesn't exist).
-   - You will see messages in the console logs confirming the schema application status.
-   - You need to re-run this command if you make changes to `database/schema.sql` and want to apply them (note: the current script re-applies the whole schema, which is safe for `CREATE TABLE IF NOT EXISTS` but not for destructive changes without a proper migration strategy).
+### Database Management
 
-4. **Populating and Using `database/schema.sql` (Your Responsibility):**
+This starter uses SQLite via `better-sqlite3`. The schema is defined in `database/schema.sql` and applied using pnpm scripts.
 
-   - **To create your database structure:** Open `database/schema.sql` and write your `CREATE TABLE` statements.
-   - **Example `database/schema.sql`:**
+1. **Database File (`database/starter_default.db`):**
 
-     ```sql
-     -- database/schema.sql
-     CREATE TABLE IF NOT EXISTS users (
-         id TEXT PRIMARY KEY,
-         email TEXT UNIQUE NOT NULL,
-         name TEXT,
-         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-     );
-     -- Add other tables as needed
-     ```
+   - Created in the `database/` directory when you run `pnpm run db:migrate` or when the app first connects (if the schema was already applied).
+   - This file is gitignored and should not be committed.
 
-### Mini-Guide: Setting Up Your Initial Database Schema
+2. **Schema Definition (`database/schema.sql`):**
 
-1. **Ensure `tsx` is installed as a dev dependency:**
-   If you haven't already, run: `pnpm add -D tsx`
-2. **Locate/Create `database/schema.sql`**: Ensure this file exists in the `database/` directory.
-3. **Define Your Tables**: Open `database/schema.sql` and write your `CREATE TABLE` SQL statements.
-4. **Run the Migration Script**:
+   - Define your `CREATE TABLE IF NOT EXISTS ...`, `CREATE INDEX IF NOT EXISTS ...`, etc., SQL statements here.
+
+3. **Managing Your Schema (Development Workflow):**
+
+   - **`pnpm run db:migrate` (Initialize or Apply Non-Destructive Schema Updates):**
+     - **Use For:** Initial database setup; adding new tables/indexes to `schema.sql` (using `IF NOT EXISTS`).
+     - **How it Works:** Executes the entire `database/schema.sql` file.
+   - **`pnpm run db:reset` (Wipe and Recreate Database from Schema):**
+     - **Use For:** Major schema changes, starting fresh with an empty DB, or troubleshooting.
+     - **Warning:** This command **deletes all data** in your local `starter_default.db`.
+     - **How it Works:** Deletes the current `.db` file, then re-applies `schema.sql` via the migration logic.
+
+4. **Initial Setup Steps:**
+
+   1. Define your initial table structure in `database/schema.sql`.
+   2. Run: `pnpm run db:migrate`
+   3. Verify table creation using a SQLite browser.
+
+5. **Making Schema Changes Later:**
+
+   - **Additive (new tables/indexes with `IF NOT EXISTS`):** Update `schema.sql`, run `pnpm run db:migrate`.
+   - **Destructive/Complex (ALTER, DROP):** Update `schema.sql`, then run `pnpm run db:reset` (this wipes local data). For production or data preservation, a versioned migration system is needed (see "Advanced Migrations").
+
+6. **Advanced Migrations (Future Consideration):**
+   The current `db:migrate` is basic. For evolving a database with data, a versioned migration system (individual SQL files, managed by a tool or custom script) is recommended.
+
+### Running Locally
+
+```bash
+pnpm run dev
+```
+
+Access at `http://localhost:3000`. Ensure you've run `pnpm run db:migrate` at least once.
+
+### Running with Docker
+
+(Recommended for a consistent environment)
+
+1. **Ensure Docker Desktop is running.**
+2. Navigate to the `Docker/` directory: `cd Docker`
+3. **Build image (first time or after Dockerfile/config changes):**
 
    ```bash
-   pnpm run db:migrate
+   docker compose build --no-cache app
    ```
 
-   - This will create `database/starter_default.db` (if it doesn't exist) and execute the SQL from `schema.sql`. Check your console logs for confirmation.
-
-5. **Verify Schema Creation**:
-   - Use a SQLite browser tool (e.g., DB Browser for SQLite, DBeaver, VS Code SQLite extension) to open `database/starter_default.db`.
-   - Inspect its structure to confirm that your tables were created.
-
-### Resetting the Database (For Development)
-
-If you need to completely reset your local database (delete all data and re-apply the schema from `schema.sql`):
-
-1. Ensure your `database/schema.sql` is up-to-date.
-2. Run the reset script:
+4. **Run containers:**
 
    ```bash
-   pnpm run db:reset
+   docker compose up
    ```
 
-   This will delete the current `starter_default.db` file and then apply `schema.sql` to a new, empty database. **Warning: This will delete all data in your local development database.**
+   (For detached mode, use `docker compose up -d`. View logs with `docker compose logs -f app`.)
+   Access at `http://localhost:3000`.
 
-### Managing Schema Changes (Migrations) - Beyond Initial Setup
+5. **Hot Reloading:** Code changes in `src/` and `public/` on your local machine should reflect immediately in the browser due to Docker volume mounts. If not, try uncommenting `WATCHPACK_POLLING: "true"` in `docker-compose.yml`.
 
-- The `pnpm run db:migrate` script (as currently implemented by executing the full `schema.sql`) is primarily for **initial database setup and adding new tables with `IF NOT EXISTS`**.
+6. **Stopping Containers:** Press `Ctrl+C` in the terminal running `docker compose up`, or run `docker compose down` (use `docker compose down -v` for full cleanup including anonymous volumes).
 
-* For more complex schema changes on an existing database with data (e.g., `ALTER TABLE`, `DROP TABLE`, renaming columns), you will need to implement a more robust **migration strategy**. This might involve:
-  - Writing individual, versioned SQL migration files.
-  - Using a dedicated migration library compatible with `better-sqlite3` (e.g., by adapting `migrate.ts` to manage versioned migrations).
-* This is a more advanced topic typically addressed as your project grows.
+7. **Production Optimization:** Refer to [`guida_ottimizzazione_docker.md`](./guida_ottimizzazione_docker.md) for creating smaller production images.
 
 ## Authentication (Clerk)
 
+(Questa sezione sembra già buona, la lascio com'era nel tuo file)
 User authentication is handled by [Clerk](https://clerk.com/).
 
 - Sign-up, sign-in, user profiles, and session management are managed by Clerk components and APIs.
@@ -350,6 +311,7 @@ User authentication is handled by [Clerk](https://clerk.com/).
 ### Access Control Pages
 
 - `/devi-autenticarti`: Displayed when authentication is required.
+
 - `/no-access`: Displayed when an authenticated user lacks permissions for a route.
 
 ### Route Protection
@@ -363,6 +325,8 @@ Route protection is implemented via `src/middleware.ts` using `clerkMiddleware`.
 
 ## Code Quality & Formatting
 
+(Questa sezione sembra già buona)
+
 - **ESLint** and **Prettier** are configured for linting and code formatting.
 - **Naming Conventions**: Enforced by `eslint-plugin-check-file` (KEBAB_CASE for files and folders in `src`).
 - To format code:
@@ -375,13 +339,13 @@ Route protection is implemented via `src/middleware.ts` using `clerkMiddleware`.
 
 ## GitHub Workflow (CI)
 
-(This section is from the original README, adapt as needed. The example `ci.yaml` uses `npm`, update to `pnpm`.)
-
+(Questa sezione sembra già buona e aggiornata per pnpm)
 A basic CI workflow can be set up using GitHub Actions. Create `.github/workflows/ci.yaml`:
 
 ```yaml
 name: CI
-
+# ... (contenuto YAML come l'avevi, è corretto per pnpm)
+# ... (assicurati che node-version in setup-node sia '18' o '20' per coerenza col Dockerfile)
 on: [push]
 
 jobs:
@@ -389,44 +353,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4 # Updated to v4
+        uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4 # Use pnpm setup action
+        uses: pnpm/action-setup@v4
         with:
-          version: 8 # Specify pnpm version (or latest)
+          version: 8 # Or your target pnpm version
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20" # Match Dockerfile Node version
+          node-version: "20" # Match your project's Node.js version (e.g., from Dockerfile)
           cache: "pnpm"
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      # Optional: Copy .env.example to .env for build process if needed
-      # - name: Setup .env file
-      #   run: cp .env.local.example .env.local # Or .env if your build needs it
-
       - name: Typecheck
-        run: pnpm tsc --noEmit # Or your typecheck script
+        run: pnpm tsc --noEmit # Or your specific typecheck script
 
       - name: Lint
         run: pnpm lint
 
       - name: Build
-        run: pnpm build
+        run: pnpm run build
 ```
 
-This workflow will:
+## Using as a Starter for New Projects
 
-- Checkout code.
-- Set up Node.js and pnpm.
-- Install dependencies.
-- Run type checking, linting, and the build process on every push.
-
-## Starting a New Project from this Starter Kit
+(Questa sezione sembra già buona)
 
 1. Create a new repository on GitHub (e.g., `my-new-project`). **Do not** initialize it with a README or other files.
 2. Clone this starter kit repository (`nuno-starter-kit-2.0`) to your local machine.
@@ -459,32 +414,17 @@ This workflow will:
    git push -u origin main
    ```
 
-8. Follow the [Local Development Setup](#local-development-setup) steps for your new project.
+8. Follow the [Development Setup](#development-setup) steps for your new project.
 
 ## Resources
 
 - [Next.js Documentation](https://nextjs.org/docs)
+
 - [Clerk Documentation](https://clerk.com/docs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [BetterSQLite3 Documentation](https://github.com/WiseLibs/better-sqlite3)
 - [pnpm Documentation](https://pnpm.io/motivation)
 
----
-
-This README provides a comprehensive guide to get started with this Next.js starter kit.
-
 ```
-
-**Punti Chiave di Questo README Fuso:**
-
-*   **Nome Progetto Aggiornato:** "Nuno's Next.js Starter Kit 2.0".
-*   **Tecnologie Chiave Evidenziate:** Docker, pnpm, BetterSQLite, Clerk sono menzionate chiaramente.
-*   **Struttura Directory:** Ho cercato di riflettere la struttura attuale, inclusa `Docker/`, `database/`, e le pagine specifiche come `/user-dashboard`.
-*   **Setup:** Istruzioni aggiornate per `pnpm` e per la configurazione di Docker e `.env.local`.
-*   **Database:** Spiega l'uso di BetterSQLite e `schema.sql`.
-*   **Autenticazione:** Dettagli su Clerk e la protezione delle rotte.
-*   **CI Workflow:** Aggiornato l'esempio per usare `pnpm` e azioni GitHub più recenti.
-*   **"Starting a New Project":** Istruzioni chiare su come usare questo starter per un nuovo progetto.
-*   **Rimozione di Stack Non Più Primario:** Ho rimosso riferimenti dettagliati a Drizzle/Postgres, NextAuth, NextUI, Conform.js dallo stack principale se non sono attivamente configurati e usati in *questa* versione dello starter (anche se potrebbero essere nel `package.json` originale). L'obiettivo è descrivere lo stato *attuale* dello starter. Se vuoi mantenerli come "opzioni facili da integrare", puoi menzionarli in una sezione separata.
 
 ```
