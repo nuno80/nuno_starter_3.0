@@ -148,17 +148,21 @@ nuno-starter-kit-2.0/
 ````
 
 2. Install dependencies:
+
    ```bash
    pnpm install
    ```
+
    bun e npm danno problemi, usa pnpm
 
 ### Environment Variables
 
 1. Create a `.env.local` file in the root of the project by copying `.env.local.example` (if you create one) or by creating it manually.
+
    ```bash
    cp .env.local.example .env.local # If .env.local.example exists
    ```
+
 2. Populate `.env.local` with your Clerk keys and other necessary variables:
 
    ```env
@@ -190,144 +194,151 @@ The application will be available at `http://localhost:3000`. The SQLite databas
 
 This starter kit includes a Docker setup to provide a consistent and isolated development environment.
 
-1.  **Ensure Docker Desktop is running.**
+1. **Ensure Docker Desktop is running.**
 
-2.  **Navigate to the `Docker/` directory** within your project root:
+2. **Navigate to the `Docker/` directory** within your project root:
 
-    ```bash
-    cd Docker
-    ```
+   ```bash
+   cd Docker
+   ```
 
-    _(Alternatively, you can run `docker compose` commands from the project root by specifying the path to the compose file, e.g., `docker compose -f Docker/docker-compose.yml ...`)_
+   _(Alternatively, you can run `docker compose` commands from the project root by specifying the path to the compose file, e.g., `docker compose -f Docker/docker-compose.yml ...`)_
 
-3.  **Build the Docker image(s):**
-    This step is crucial for the first time or if you've made changes to the `Dockerfile`, `package.json`, or other configuration files copied during the image build process. Using `--no-cache` ensures a clean build, ignoring any previous Docker layer cache.
+3. **Build the Docker image(s):**
+   This step is crucial for the first time or if you've made changes to the `Dockerfile`, `package.json`, or other configuration files copied during the image build process. Using `--no-cache` ensures a clean build, ignoring any previous Docker layer cache.
 
-    ```bash
-    docker compose build --no-cache app
-    ```
+   ```bash
+   docker compose build --no-cache app
+   ```
 
-4.  **Run the application using Docker Compose:**
-    This will start the service(s) defined in your `docker-compose.yml` (in this case, the `app` service).
+4. **Run the application using Docker Compose:**
+   This will start the service(s) defined in your `docker-compose.yml` (in this case, the `app` service).
 
-    ```bash
-    docker compose up
-    ```
+   ```bash
+   docker compose up
+   ```
 
-    Usa questo comando se prevedi una fase di sviluppo molto interattiva.
+   Usa questo comando se prevedi una fase di sviluppo molto interattiva.
 
-    - è anche possibile eseguire 'docker compose up -d'. Quando esegui docker compose up -d, Docker Compose avvia i container e poi restituisce immediatamente il controllo al tuo terminale. I container continuano a girare in background.. Richiede un comando separato (docker compose logs -f app) per vedere i log.
-    - You will see the application logs directly in your terminal.
-    - The application will be available at `http://localhost:3000`.
+   - è anche possibile eseguire 'docker compose up -d'. Quando esegui docker compose up -d, Docker Compose avvia i container e poi restituisce immediatamente il controllo al tuo terminale. I container continuano a girare in background.. Richiede un comando separato (docker compose logs -f app) per vedere i log.
+   - You will see the application logs directly in your terminal.
+   - The application will be available at `http://localhost:3000`.
 
-5.  **Hot Reloading (Live Code Changes):**
+5. **Hot Reloading (Live Code Changes):**
 
-    - **Changes to your code in the `src/` directory (and `public/` directory) on your local machine should be visible immediately in your browser at `http://localhost:3000`**, similar to when using `pnpm run dev` directly.
-    - This is because the `docker-compose.yml` file is configured to use **volumes** (`- ../src:/app/src` and `- ../public:/app/public`). These volumes map your local `src/` and `public/` directories into the `/app/src/` and `/app/public/` directories inside the running Docker container.
-    - When you save a file in `src/` locally, Next.js (running inside the container) detects the change via this mounted volume and triggers its hot-reloading mechanism, updating your browser automatically.
-    - **Note:** If hot-reloading seems sluggish or doesn't work reliably on your system, you might need to enable polling by uncommenting `CHOKIDAR_USEPOLLING: "true"` or `WATCHPACK_POLLING: "true"` in the `environment` section of your `docker-compose.yml` file.
+   - **Changes to your code in the `src/` directory (and `public/` directory) on your local machine should be visible immediately in your browser at `http://localhost:3000`**, similar to when using `pnpm run dev` directly.
+   - This is because the `docker-compose.yml` file is configured to use **volumes** (`- ../src:/app/src` and `- ../public:/app/public`). These volumes map your local `src/` and `public/` directories into the `/app/src/` and `/app/public/` directories inside the running Docker container.
+   - When you save a file in `src/` locally, Next.js (running inside the container) detects the change via this mounted volume and triggers its hot-reloading mechanism, updating your browser automatically.
+   - **Note:** If hot-reloading seems sluggish or doesn't work reliably on your system, you might need to enable polling by uncommenting `CHOKIDAR_USEPOLLING: "true"` or `WATCHPACK_POLLING: "true"` in the `environment` section of your `docker-compose.yml` file.
 
-6.  **Viewing Logs (if running in detached mode):**
-    If you start the containers in detached (background) mode using `docker compose up -d`, you can view and follow the logs with:
+6. **Viewing Logs (if running in detached mode):**
+   If you start the containers in detached (background) mode using `docker compose up -d`, you can view and follow the logs with:
 
-    ```bash
-    docker compose logs -f app
-    ```
+   ```bash
+   docker compose logs -f app
+   ```
 
-7.  **Stopping and Removing the Containers:**
-    When you are done working or want to stop the application:
+7. **Stopping and Removing the Containers:**
+   When you are done working or want to stop the application:
 
-    - If `docker compose up` is running in your terminal, press `Ctrl+C` in that terminal.
-    - To stop and remove the containers, network, and volumes defined in `docker-compose.yml` (if you ran in detached mode or from another terminal):
-      ```bash
-      docker compose down
-      ```
-      Using `docker compose down -v` will also remove any named volumes anonymous (though we don't explicitly define named volumes for the app code in this setup, it's a good practice for a full cleanup if needed).
+   - If `docker compose up` is running in your terminal, press `Ctrl+C` in that terminal.
+   - To stop and remove the containers, network, and volumes defined in `docker-compose.yml` (if you ran in detached mode or from another terminal):
 
-8.  **Docker Image Optimization**: For guidance on creating a production-optimized, smaller Docker image from this starter, refer to the [Docker Image Optimization Guide](./guida_ottimizzazione_docker.md).
+     ```bash
+     docker compose down
+     ```
+
+     Using `docker compose down -v` will also remove any named volumes anonymous (though we don't explicitly define named volumes for the app code in this setup, it's a good practice for a full cleanup if needed).
+
+8. **Docker Image Optimization**: For guidance on creating a production-optimized, smaller Docker image from this starter, refer to the [Docker Image Optimization Guide](./guida_ottimizzazione_docker.md).
 
 The `database/` directory from your host machine is also mounted into the container, so your SQLite database will persist across container restarts.
 
 ## Database (SQLite via BetterSQLite3)
 
-This starter kit is configured to use **SQLite** as its local database, accessed directly via the `better-sqlite3` library for simplicity and speed in development.
+This starter kit is configured to use **SQLite** as its local database, accessed directly via the `better-sqlite3` library for simplicity and speed in development. The database schema is managed manually through an SQL file and a migration script.
 
-### How the Database is Managed & Initialized:
+### How the Database is Managed & Initialized
 
-1.  **Automatic Database File Creation:**
+1. **Database File Location:**
 
-    - When you run the application for the first time (either via `pnpm run dev` locally or using `docker compose up`), a SQLite database file will be **automatically created** if it doesn't already exist.
-    - This file is located in the `database/` directory at the root of your project.
-    - The default name for the database file is `starter_default.db` (as configured in `src/lib/db/index.ts`).
+   - The SQLite database file will be created in the `database/` directory at the root of your project when the application first connects to it or when you run the migration script.
+   - The default name for the database file is `starter_default.db` (as configured in `src/lib/db/index.ts`).
+   - **Important:** Ensure the database file (`starter_default.db` and its auxiliary files like `-shm`, `-wal`) **ARE LISTED** in your `.gitignore` file. These files **should not be committed** to version control.
 
-2.  **Schema Definition (`database/schema.sql`):**
+2. **Schema Definition (`database/schema.sql`):**
 
-    - A crucial file named `schema.sql` is located in the `database/` directory.
-    - **This is where you MUST define your database tables, indexes, and other schema elements using SQL DDL (Data Definition Language) statements.** For example, `CREATE TABLE ...`.
+   - A crucial file named `schema.sql` is located in the `database/` directory.
+   - **This is where you MUST define your database tables, indexes, and other schema elements using SQL DDL (Data Definition Language) statements.** For example, `CREATE TABLE IF NOT EXISTS ...`.
 
-3.  **Automatic Schema Application (on First Run):**
+3. **Manual Schema Application (Migration Script):**
 
-    - Immediately after a **new** database file (e.g., `starter_default.db`) is created (i.e., on the very first run of the application with no existing database file), the application will:
-      1.  Look for the `database/schema.sql` file.
-      2.  If `schema.sql` exists and contains SQL statements, those statements will be **executed automatically** on the newly created database. This sets up your tables according to your definitions.
-      3.  You will see messages in the console logs confirming the database creation and schema application status.
-    - If `schema.sql` is not found or is empty, the new database will be created, but no tables will be set up initially. You will see a warning in the console.
+   - Unlike some setups, this starter kit requires you to **manually apply the database schema** using a provided script.
+   - After cloning the project and installing dependencies, you need to run:
 
-4.  **Populating and Using `database/schema.sql` (Your Responsibility):**
+     ```bash
+     pnpm run db:migrate
+     ```
 
-    - **To create your database structure:** Open `database/schema.sql` and write your `CREATE TABLE` statements (and any other DDL like `CREATE INDEX`, etc.).
-    - **Example `database/schema.sql`:**
+   - This command executes the `src/db/migrate.ts` script, which reads `database/schema.sql` and applies it to your `starter_default.db` (creating the file if it doesn't exist).
+   - You will see messages in the console logs confirming the schema application status.
+   - You need to re-run this command if you make changes to `database/schema.sql` and want to apply them (note: the current script re-applies the whole schema, which is safe for `CREATE TABLE IF NOT EXISTS` but not for destructive changes without a proper migration strategy).
 
-      ```sql
-      -- database/schema.sql
-      CREATE TABLE IF NOT EXISTS users (
-          id TEXT PRIMARY KEY,
-          email TEXT UNIQUE NOT NULL,
-          name TEXT,
-          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
+4. **Populating and Using `database/schema.sql` (Your Responsibility):**
 
-      CREATE TABLE IF NOT EXISTS items (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT NOT NULL,
-          description TEXT,
-          user_id TEXT, -- Assuming a link to a user
-          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (user_id) REFERENCES users(id)
-      );
-      ```
+   - **To create your database structure:** Open `database/schema.sql` and write your `CREATE TABLE` statements.
+   - **Example `database/schema.sql`:**
 
-    - The application will only attempt to apply `schema.sql` to a **brand new database file**. It will not re-apply or modify an existing database using this `schema.sql` file on subsequent runs to prevent accidental data loss.
+     ```sql
+     -- database/schema.sql
+     CREATE TABLE IF NOT EXISTS users (
+         id TEXT PRIMARY KEY,
+         email TEXT UNIQUE NOT NULL,
+         name TEXT,
+         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+     );
+     -- Add other tables as needed
+     ```
 
 ### Mini-Guide: Setting Up Your Initial Database Schema
 
-1.  **Locate (or Create) `database/schema.sql`**: Ensure this file exists in the `database/` directory.
-2.  **Define Your Tables**: Open `database/schema.sql` and write your `CREATE TABLE` SQL statements as shown in the example above.
-3.  **Run the Application for the First Time**:
+1. **Ensure `tsx` is installed as a dev dependency:**
+   If you haven't already, run: `pnpm add -D tsx`
+2. **Locate/Create `database/schema.sql`**: Ensure this file exists in the `database/` directory.
+3. **Define Your Tables**: Open `database/schema.sql` and write your `CREATE TABLE` SQL statements.
+4. **Run the Migration Script**:
 
-    - Ensure no `database/starter_default.db` file currently exists (delete it if you're re-testing this initial setup).
-    - Start the application:
-      ```bash
-      pnpm run dev
-      # OR (if using Docker, from the Docker/ directory)
-      # docker compose up
-      ```
-    - Check the console output. You should see logs indicating that `starter_default.db` was created and that `schema.sql` was applied (if it contained SQL).
+   ```bash
+   pnpm run db:migrate
+   ```
 
-4.  **Verify Schema Creation**:
-    - Use a SQLite browser tool (e.g., DB Browser for SQLite, DBeaver, VS Code SQLite extension) to open the newly created `database/starter_default.db` file.
-    - Inspect its structure to confirm that your tables and columns were created as defined in `schema.sql`.
+   - This will create `database/starter_default.db` (if it doesn't exist) and execute the SQL from `schema.sql`. Check your console logs for confirmation.
+
+5. **Verify Schema Creation**:
+   - Use a SQLite browser tool (e.g., DB Browser for SQLite, DBeaver, VS Code SQLite extension) to open `database/starter_default.db`.
+   - Inspect its structure to confirm that your tables were created.
+
+### Resetting the Database (For Development)
+
+If you need to completely reset your local database (delete all data and re-apply the schema from `schema.sql`):
+
+1. Ensure your `database/schema.sql` is up-to-date.
+2. Run the reset script:
+
+   ```bash
+   pnpm run db:reset
+   ```
+
+   This will delete the current `starter_default.db` file and then apply `schema.sql` to a new, empty database. **Warning: This will delete all data in your local development database.**
 
 ### Managing Schema Changes (Migrations) - Beyond Initial Setup
 
-- The automatic execution of `schema.sql` is for **initial database setup only**.
-- For subsequent changes to your database schema (e.g., adding a new table, altering an existing one) _after_ the database already exists and contains data, you will need to implement a **migration strategy**.
-- This starter kit does not include a built-in migration tool for `better-sqlite3`. Common approaches include:
-  - Writing individual SQL migration scripts (e.g., `0001_create_users.sql`, `0002_add_bio_to_users.sql`).
-  - Using a lightweight migration library compatible with `better-sqlite3` or writing a custom script to manage and apply these migrations.
-- This is a more advanced topic typically addressed as your project grows.
+- The `pnpm run db:migrate` script (as currently implemented by executing the full `schema.sql`) is primarily for **initial database setup and adding new tables with `IF NOT EXISTS`**.
 
-This setup ensures that anyone using the starter kit can quickly get a database initialized with a predefined schema by simply populating `database/schema.sql` and running the application.
+* For more complex schema changes on an existing database with data (e.g., `ALTER TABLE`, `DROP TABLE`, renaming columns), you will need to implement a more robust **migration strategy**. This might involve:
+  - Writing individual, versioned SQL migration files.
+  - Using a dedicated migration library compatible with `better-sqlite3` (e.g., by adapting `migrate.ts` to manage versioned migrations).
+* This is a more advanced topic typically addressed as your project grows.
 
 ## Authentication (Clerk)
 
@@ -355,9 +366,11 @@ Route protection is implemented via `src/middleware.ts` using `clerkMiddleware`.
 - **ESLint** and **Prettier** are configured for linting and code formatting.
 - **Naming Conventions**: Enforced by `eslint-plugin-check-file` (KEBAB_CASE for files and folders in `src`).
 - To format code:
+
   ```bash
   pnpm run format
   ```
+
 - Linting is typically integrated with your IDE and also run during the CI process.
 
 ## GitHub Workflow (CI)
@@ -419,10 +432,13 @@ This workflow will:
 2. Clone this starter kit repository (`nuno-starter-kit-2.0`) to your local machine.
 3. Navigate into the cloned directory.
 4. Remove the existing Git remote:
+
    ```bash
    git remote remove origin
    ```
+
 5. (Optional, for a clean history in your new project) Remove the `.git` folder and re-initialize Git:
+
    ```bash
    rm -rf .git
    git init
@@ -430,14 +446,19 @@ This workflow will:
    git add .
    git commit -m "Initial commit from nuno-starter-kit-2.0"
    ```
+
 6. Add your new GitHub repository as the remote:
+
    ```bash
    git remote add origin <URL_OF_YOUR_NEW_GITHUB_REPO>
    ```
+
 7. Push to your new repository:
+
    ```bash
    git push -u origin main
    ```
+
 8. Follow the [Local Development Setup](#local-development-setup) steps for your new project.
 
 ## Resources

@@ -1,43 +1,42 @@
 // src/db/migrate.ts
-import fs from "fs";
 import path from "path";
 
-import { db } from "@/lib/db";
+import { closeDbConnection, db } from "@/lib/db";
+// Importa l'istanza db
+import { applySchemaToDb } from "./utils";
 
-// Importa l'istanza db già connessa
+// Importa la funzione helper
 
-function runMigrations() {
-  console.log("Starting database migration...");
+async function runMigration() {
   const schemaPath = path.join(process.cwd(), "database", "schema.sql");
-
-  if (!fs.existsSync(schemaPath)) {
-    console.error(`Migration error: Schema file not found at ${schemaPath}`);
-    process.exit(1);
-  }
+  console.log("Running database migration script...");
 
   try {
-    const schemaSql = fs.readFileSync(schemaPath, "utf8");
-    if (schemaSql.trim() === "") {
-      console.log("Schema file is empty. No migrations to apply.");
-      return;
+    // L'istanza 'db' da '../lib/db' dovrebbe già essere connessa.
+    // Se non lo fosse, new Database() qui creerebbe un'altra istanza.
+    // Assicuriamoci che 'db' sia effettivamente l'istanza che vogliamo usare.
+    if (!db || !db.open) {
+      console.error(
+        "Database connection not found or not open. Exiting migration."
+      );
+      process.exit(1);
     }
 
-    console.log("Applying schema from database/schema.sql...");
-    db.exec(schemaSql); // Esegue l'intero script SQL
-    console.log("Database schema applied successfully.");
-  } catch (error) {
-    console.error("Error applying database schema:", error);
-    process.exit(1);
+    applySchemaToDb(db, schemaPath);
+    console.log("Migration script finished successfully.");
+  } catch (e) {
+    console.error("Migration script failed:", e);
+    process.exit(1); // Esci con codice di errore se la migrazione fallisce
   } finally {
-    // È buona pratica chiudere la connessione se lo script è standalone
-    // Tuttavia, se altri script la usano o se è un modulo importato, potresti non volerlo.
-    // Per uno script di migrazione che viene eseguito e termina, chiudere è ok.
+    // Decidi se chiudere la connessione qui.
+    // Se questo script è l'unico utente della connessione in questo momento, è sicuro.
+    // Se l'app principale potrebbe ancora usare la connessione singleton, non chiuderla.
+    // Per uno script CLI autonomo, chiudere è generalmente una buona pratica.
     if (db && db.open) {
-      // db.close(); // Commentato per ora, valuta se necessario
-      // console.log('Database connection closed by migration script.');
+      console.log("Closing database connection after migration.");
+      closeDbConnection();
     }
   }
 }
 
-// Esegui la funzione di migrazione
-runMigrations();
+runMigration();

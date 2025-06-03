@@ -5,12 +5,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { ThemeProvider } from "@/components/theme-provider";
-// Importa il modulo db SOLO per i suoi side effects (esecuzione del codice di inizializzazione)
-import "@/lib/db/index";
 
 import "./globals.css";
-
-// Assicurati che il percorso sia corretto (db/index o solo db se index è implicito)
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fantavega App",
-  description: "Fantacalcio Auction System",
+  title: "Fantavega App", // O il titolo che preferisci
+  description: "Fantacalcio Auction System", // O la descrizione che preferisci
 };
 
 export default function RootLayout({
@@ -32,12 +28,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Log per indicare che RootLayout sta renderizzando sul server.
-  // I log specifici della creazione del DB dovrebbero venire da db/index.ts
-  console.log(
-    "[RootLayout Check] RootLayout is rendering on the server. DB initialization logs should appear if this is the first run and DB module was imported."
-  );
-
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
