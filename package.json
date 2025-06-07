@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier src/ --write",
+    "db:seed": "pnpm exec tsx src/lib/db/seed.ts",
     "db:backup": "pnpm exec tsx src/lib/db/backup.ts",
     "db:migrate": "pnpm exec tsx src/lib/db/migrate.ts",
     "db:reset": "pnpm exec tsx src/lib/db/reset.ts",
