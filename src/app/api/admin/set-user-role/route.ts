@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       );
     }
     // Non è necessario controllare 'roleToSet' qui, perché null è un valore valido per rimuovere il ruolo.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return NextResponse.json(
       { error: "Corpo della richiesta non valido o malformato." },

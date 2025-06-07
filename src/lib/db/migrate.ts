@@ -1,42 +1,52 @@
 // src/db/migrate.ts
+// Assicurati che l'alias @ funzioni o usa '../lib/db'
 import path from "path";
 
 import { closeDbConnection, db } from "@/lib/db";
-// Importa l'istanza db
+
 import { applySchemaToDb } from "./utils";
 
-// Importa la funzione helper
+// Assicurati che il percorso a utils.ts sia corretto
 
-async function runMigration() {
+async function runFullSchemaMigration() {
   const schemaPath = path.join(process.cwd(), "database", "schema.sql");
-  console.log("Running database migration script...");
+  console.log(
+    "[Migrate Script] Running full schema application from database/schema.sql..."
+  );
 
   try {
-    // L'istanza 'db' da '../lib/db' dovrebbe già essere connessa.
-    // Se non lo fosse, new Database() qui creerebbe un'altra istanza.
-    // Assicuriamoci che 'db' sia effettivamente l'istanza che vogliamo usare.
     if (!db || !db.open) {
       console.error(
-        "Database connection not found or not open. Exiting migration."
+        "[Migrate Script] Database connection not found or not open. This script relies on a connection being established by importing from @/lib/db. Exiting."
       );
-      process.exit(1);
+      process.exit(1); // Esce se la connessione DB non è valida
     }
 
     applySchemaToDb(db, schemaPath);
-    console.log("Migration script finished successfully.");
-  } catch (e) {
-    console.error("Migration script failed:", e);
-    process.exit(1); // Esci con codice di errore se la migrazione fallisce
+    console.log(
+      "[Migrate Script] Schema application script finished successfully."
+    );
+  } catch (e: unknown) {
+    // Blocco catch inizia qui
+    console.error(
+      "[Migrate Script] Script failed:",
+      e instanceof Error ? e.message : String(e)
+    );
+    // Se vuoi loggare lo stack trace per debug più approfondito:
+    // if (e instanceof Error && e.stack) {
+    //   console.error("[Migrate Script] Stack trace:", e.stack);
+    // }
+    process.exit(1); // Esci con codice di errore
   } finally {
-    // Decidi se chiudere la connessione qui.
-    // Se questo script è l'unico utente della connessione in questo momento, è sicuro.
-    // Se l'app principale potrebbe ancora usare la connessione singleton, non chiuderla.
-    // Per uno script CLI autonomo, chiudere è generalmente una buona pratica.
+    // Blocco finally inizia qui
+    // Chiudi la connessione dopo l'esecuzione dello script, sia in caso di successo che di errore
     if (db && db.open) {
-      console.log("Closing database connection after migration.");
+      console.log("[Migrate Script] Closing database connection.");
       closeDbConnection();
     }
+    console.log("[Migrate Script] Script execution finished.");
   }
 }
 
-runMigration();
+// Esegui la funzione principale
+runFullSchemaMigration();

@@ -6,53 +6,173 @@ A comprehensive Next.js 15 starter kit designed to accelerate the setup process 
 
 ## 🚀 Quickstart Guide
 
-1. **Clone & Install:**
+Get your project up and running quickly with these steps:
+
+1. **Clone & Navigate:**
 
    ```bash
-   git clone https://github.com/nuno80/nuno-starter-kit-2.0.git my-new-app # Replace with your repo URL if different
+   git clone https://github.com/nuno80/nuno-starter-kit-2.0.git my-new-app
    cd my-new-app
-   pnpm install
-   pnpm add -D tsx # Ensure tsx is available for DB scripts
+   # IMPORTANT: This is now YOUR project. See "Post-Clone Customization" section below.
+   # You'll likely want to re-initialize Git for your new project (see "Using as a Starter...").
    ```
 
-2. **Environment Variables:**
-   Copy `.env.local.example` to `.env.local` (if `example` file exists, otherwise create `.env.local` manually).
+2. **Set Up Node.js (v20.x Recommended):**
+   This starter is optimized for Node.js v20.x.
 
    ```bash
-   # cp .env.local.example .env.local
+   # Example using nvm:
+   nvm install 20
+   nvm use 20
    ```
 
-   Fill in your Clerk keys in `.env.local`:
+3. **Install Dependencies:**
+
+   ```bash
+   pnpm install
+   ```
+
+   - ⚠️ **Lockfile & Node Version:** Align local Node.js with v20.x. If issues arise with a different Node version, regenerate lockfile: `rm -f pnpm-lock.yaml && rm -rf node_modules && pnpm install`.
+
+4. **Configure Environment Variables:**
+   Copy or create `.env.local`. Add your Clerk API keys:
 
    ```env
    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_YOUR_KEY
    CLERK_SECRET_KEY=sk_test_YOUR_KEY
    ```
 
-3. **Initialize Database:**
-   Define your initial table structure in `database/schema.sql`, then run:
+5. **Database Setup & Management:**
 
-   ```bash
-   pnpm run db:migrate
-   ```
-
-4. **Run Development Server:**
-
-   - With Docker (Recommended for a consistent environment)\*\*
-     First, ensure Docker Desktop is running. Then, from your project root directory:
+   - **Define Initial Schema:** Open `database/schema.sql` and write your `CREATE TABLE IF NOT EXISTS ...` statements.
+   - **Initialize Database (Apply Schema):**
 
      ```bash
-     # Navigate into the Docker directory
-     cd Docker
-
-     # Build the Docker image (run this for the first time, or after Dockerfile/config changes)
-     docker compose build --no-cache app
-
-     # Start the application using Docker Compose
-     docker compose up
+     pnpm run db:migrate
      ```
 
-     The application will be available at `http://localhost:3000`. (See the "Running with Docker" section below for more details on detached mode and logs).
+   - **DB Scripts Overview:**
+     - `db:migrate`: Applies `schema.sql` (initial setup, new tables).
+     - `db:apply-changes`: Executes `database/adhoc_changes.sql` (backs up DB first).
+     - `db:reset`: Wipes and recreates DB from `schema.sql` (backs up DB first).
+     - `db:backup`: Manually creates a backup.
+       (See "Database Management" section for details).
+
+6. **Run Development Server:**
+
+   - **Local:** `pnpm run dev`
+   - **Docker:** `cd Docker && docker compose build --no-cache app && docker compose up`
+     Access at `http://localhost:3000`.
+
+7. **Initial Git Setup for YOUR New Project (After Cloning Starter):**
+   Once you've cloned the starter and are ready to make it your own project:
+
+   ```bash
+   # Inside your new project directory (e.g., my-new-app)
+   rm -rf .git                     # Remove starter's Git history
+   git init                        # Initialize a new Git repository
+   git branch -m main              # Ensure main branch
+   # Make your initial customizations (package.json name, README title, etc.)
+   git add .
+   git commit -m "Initial commit for My New App (based on nuno-starter-kit-2.0)"
+   # Go to GitHub, create a NEW EMPTY repository for your project
+   git remote add origin <URL_OF_YOUR_NEW_GITHUB_REPO>
+   git push -u origin main
+   ```
+
+---
+
+---
+
+## 🚀 Post-Clone Customization (Important First Steps!)
+
+After cloning this starter kit to begin **your new project**, it's crucial to update several project-specific names and configurations. This ensures your project is independent, correctly branded, and avoids conflicts if you manage multiple projects based on this starter.
+
+Follow these steps in your new project's directory:
+
+1. **Update Project Name and Details in `package.json`:**
+
+   - Open `package.json` in the root of your project.
+   - **`name`**: Change this from `nuno-starter-kit-2.0` (or the current starter name) to your new project's unique name (e.g., `my-new-app`). It's conventional to use kebab-case (all lowercase, words separated by hyphens).
+   - **`description`**: Write a brief description specific to your new project.
+   - **`author`**: Update with your name/organization if desired.
+   - _(Optional)_ Review and update other fields like `repository`, `bugs`, `homepage` if you plan for this project to have its own public presence or issue tracking.
+
+2. **Configure Docker Container Name in `Docker/docker-compose.yml`:**
+
+   - Open `Docker/docker-compose.yml`.
+   - Find the `services: > app: > container_name:` section.
+   - Change the value from `nuno_next_starter_2_dev` to a unique name for your project's Docker container (e.g., `my_new_app_dev`). This helps in easily identifying your project's container when running `docker ps` or managing multiple Dockerized projects.
+
+     ```yaml
+     # Docker/docker-compose.yml
+     services:
+       app:
+         # ... other configurations ...
+         container_name: my_new_app_dev # <-- CHANGE THIS
+         # ...
+     ```
+
+   - _(Optional)_ You can also rename the service key `app:` itself if you prefer, but remember this will change how you reference the service in `docker compose` commands (e.g., `docker compose build my-service-name`). Keeping it as `app` is generally fine.
+
+3. **Customize `README.md` (This File):**
+
+   - You are currently reading the starter kit's README.
+   - **Update the main title** (e.g., `# My New App`).
+   - **Review and adapt all sections** to be relevant to _your_ new project. Remove or modify any instructions or descriptions that are specific to _using the starter kit itself_ and not to _using your application_.
+   - Ensure the "Project Purpose" and "Technology Stack" (if you add/remove technologies) accurately describe your new application.
+
+4. **Update Application Title & Metadata in `src/app/layout.tsx`:**
+
+   - Open `src/app/layout.tsx`.
+   - Modify the `metadata` object to reflect your application's identity:
+
+     ```typescript
+     // src/app/layout.tsx
+     export const metadata: Metadata = {
+       title: "My New App", // Your application's title for browser tabs, etc.
+       description: "The best new App!", // Your app's description
+       // You can add more metadata here: icons, openGraph, etc.
+     };
+     ```
+
+5. **Replace Public Assets (`public/` directory):**
+
+   - The `public/` directory contains static assets like `favicon.ico`, logos, or placeholder images.
+   - Replace these with your project's own branding and assets. At a minimum, update `favicon.ico`.
+
+6. **Database Name (Optional - `src/lib/db/index.ts`):**
+
+   - The default database filename used by this starter is `starter_default.db`. If you wish to use a different filename for your project (e.g., `my_new_app.db`):
+     1. Open `src/lib/db/index.ts`.
+     2. Find the line: `const dbFileName = "starter_default.db";`
+     3. Change `"starter_default.db"` to your desired filename.
+     4. Ensure your `.gitignore` file still correctly ignores the new `.db` filename pattern (e.g., `*.db` or `database/*.db` should cover it).
+     5. Remember this new name if you ever need to manually interact with or delete the database file.
+
+7. **Clerk Application Keys & Configuration (`.env.local` and Clerk Dashboard):**
+
+   - You should have already created a `.env.local` file and added your Clerk API keys during the initial setup.
+   - **Crucially, ensure these keys belong to a Clerk application instance dedicated to _your new project_, not a generic or shared starter kit instance.**
+   - Review settings in your [Clerk Dashboard](https://dashboard.clerk.com/) for this new application, such as redirect URLs, enabled authentication methods, session lifetimes, etc.
+
+8. **Initialize Your Own Git Repository & Remote:**
+
+   - The "Quickstart Guide" and "Using as a Starter for New Projects" sections detail how to remove the starter kit's Git history and initialize a new repository for your project, linking it to your own new GitHub (or other Git provider) repository. **This is a critical step to make the project truly yours.**
+
+     ```bash
+     # In your new project's root directory
+     rm -rf .git
+     git init
+     git branch -m main
+     git add .
+     git commit -m "Initial commit for My new App"
+     # Create a new empty repository on GitHub
+     git remote add origin <URL_OF_YOUR_NEW_GITHUB_REPO>
+     git push -u origin main
+     ```
+
+Completing these customization steps will ensure your new project is properly set up, uniquely identified, and ready for your specific development needs.
 
 ## Table of Contents
 
@@ -228,42 +348,81 @@ nuno-starter-kit-2.0/
      pnpm run db:migrate
      ```
 
-### Database Management
+### Database Management (SQLite via BetterSQLite3)
 
-This starter uses SQLite via `better-sqlite3`. The schema is defined in `database/schema.sql` and applied using pnpm scripts.
+This starter kit uses SQLite, accessed directly with `better-sqlite3`. The database schema is primarily defined in `database/schema.sql`. Management scripts are provided via pnpm to initialize, update, and reset your local development database.
 
-1. **Database File (`database/starter_default.db`):**
+1. **Core Files:**
 
-   - Created in the `database/` directory when you run `pnpm run db:migrate` or when the app first connects (if the schema was already applied).
-   - This file is gitignored and should not be committed.
+   - **`database/starter_default.db`**: Your local SQLite database file. It's created in the `database/` directory. **This file is gitignored and should not be committed.**
+   - **`database/schema.sql`**: The **source of truth for your complete database structure**. Define all `CREATE TABLE IF NOT EXISTS ...`, `CREATE INDEX IF NOT EXISTS ...`, etc., statements here. This file _is_ committed to version control.
+   - **`database/adhoc_changes.sql`**: A temporary "scratchpad" file for SQL queries (`ALTER TABLE`, `UPDATE`, `DELETE`) that modify an existing database structure or data. **This file should be cleared or its contents commented out after use.** Its changes should ideally be reflected in `schema.sql` if they alter the final desired structure. This file _can_ be committed if you want to track a specific set of ad-hoc changes, but it's generally for one-time operations.
+   - **`database/backups/`**: This directory is automatically created to store timestamped backups of your database. **This directory is gitignored.**
 
-2. **Schema Definition (`database/schema.sql`):**
+2. **Available pnpm Scripts for Database Management:**
 
-   - Define your `CREATE TABLE IF NOT EXISTS ...`, `CREATE INDEX IF NOT EXISTS ...`, etc., SQL statements here.
+   - **`pnpm run db:backup`**
 
-3. **Managing Your Schema (Development Workflow):**
+     - **Purpose:** Manually creates a timestamped backup of your current `starter_default.db` file (and its `-shm`, `-wal` helper files) into the `database/backups/` directory.
+     - **When to Use:** Before making significant manual changes to the database or schema, or whenever you want a snapshot of your local development data.
 
-   - **`pnpm run db:migrate` (Initialize or Apply Non-Destructive Schema Updates):**
-     - **Use For:** Initial database setup; adding new tables/indexes to `schema.sql` (using `IF NOT EXISTS`).
-     - **How it Works:** Executes the entire `database/schema.sql` file.
-   - **`pnpm run db:reset` (Wipe and Recreate Database from Schema):**
-     - **Use For:** Major schema changes, starting fresh with an empty DB, or troubleshooting.
+   - **`pnpm run db:migrate`**
+
+     - **Purpose:** Applies the entire `database/schema.sql` to your `starter_default.db`. If the database file doesn't exist, it will be created.
+     - **When to Use:**
+       - **Initial Setup:** After cloning and `pnpm install`, run this to create your database tables for the first time.
+       - **Adding New Tables/Indexes:** If you've added new `CREATE TABLE IF NOT EXISTS ...` or `CREATE INDEX IF NOT EXISTS ...` statements to `schema.sql`.
+     - **Behavior:** Re-applies the full schema. Safe for additive changes using `IF NOT EXISTS`. **It will not automatically `ALTER` or `DROP` existing tables/columns** just because they are changed or removed in `schema.sql`.
+
+   - **`pnpm run db:apply-changes`**
+
+     - **Purpose:** Executes the SQL queries currently present in the `database/adhoc_changes.sql` file.
+     - **Safety:** **Automatically creates a backup** in `database/backups/` before running the queries.
+     - **When to Use:** To apply specific DML (`UPDATE`, `INSERT`, `DELETE`) or DDL (`ALTER TABLE`) commands to your existing database that are not covered by `db:migrate` (e.g., adding a column to an existing table).
+     - **Important Workflow:**
+       1. Write your `ALTER TABLE ...`, `UPDATE ...`, etc., queries in `database/adhoc_changes.sql`.
+       2. Run `pnpm run db:apply-changes`.
+       3. Verify the changes in your database.
+       4. **Crucially, if you made structural changes (like `ALTER TABLE`), update `database/schema.sql` to reflect the new, complete table structure.** This keeps `schema.sql` as the definitive source for a fresh database setup.
+       5. Clear or comment out the queries in `database/adhoc_changes.sql` to prevent re-running them unintentionally.
+
+   - **`pnpm run db:reset`**
+     - **Purpose:** Completely wipes your local `starter_default.db` and recreates it from scratch using the current `database/schema.sql`.
+     - **Safety:** **Automatically creates a backup** in `database/backups/` before deleting the database.
+     - **When to Use:**
+       - When you want a fresh, empty database structured according to the latest `schema.sql`.
+       - If `schema.sql` has major structural changes (including added columns in `CREATE TABLE` definitions, or dropped tables) and you want to apply them to a clean slate.
+       - For troubleshooting database inconsistencies in development.
      - **Warning:** This command **deletes all data** in your local `starter_default.db`.
-     - **How it Works:** Deletes the current `.db` file, then re-applies `schema.sql` via the migration logic.
 
-4. **Initial Setup Steps:**
+3. **Initial Database Setup Steps for a New Clone:**
 
-   1. Define your initial table structure in `database/schema.sql`.
-   2. Run: `pnpm run db:migrate`
-   3. Verify table creation using a SQLite browser.
+   1. Ensure `tsx` is a dev dependency (it should be after `pnpm install` if listed in `package.json`, or run `pnpm add -D tsx`).
+   2. Define your initial table structure in `database/schema.sql`.
+   3. Run the migration script to create tables:
 
-5. **Making Schema Changes Later:**
+      ```bash
+      pnpm run db:migrate
+      ```
 
-   - **Additive (new tables/indexes with `IF NOT EXISTS`):** Update `schema.sql`, run `pnpm run db:migrate`.
-   - **Destructive/Complex (ALTER, DROP):** Update `schema.sql`, then run `pnpm run db:reset` (this wipes local data). For production or data preservation, a versioned migration system is needed (see "Advanced Migrations").
+   4. Verify table creation using a SQLite browser.
 
-6. **Advanced Migrations (Future Consideration):**
-   The current `db:migrate` is basic. For evolving a database with data, a versioned migration system (individual SQL files, managed by a tool or custom script) is recommended.
+4. **Workflow for Modifying Schema on an Existing Database:**
+   - **Adding a new table/index:**
+     1. Add `CREATE TABLE IF NOT EXISTS ...` or `CREATE INDEX IF NOT EXISTS ...` to `database/schema.sql`.
+     2. Run `pnpm run db:migrate`.
+   - **Adding a column, changing a type, or other `ALTER` operations (preserving data):**
+     1. (Optional but recommended) Run `pnpm run db:backup`.
+     2. Write your `ALTER TABLE ...` command(s) in `database/adhoc_changes.sql`.
+     3. Run `pnpm run db:apply-changes`.
+     4. Verify the change.
+     5. **Update `database/schema.sql`** to reflect the new column in the `CREATE TABLE` definition.
+     6. Clear `database/adhoc_changes.sql`.
+   - **Major refactor or starting fresh (will wipe data):**
+     1. Update `database/schema.sql` to the desired final state.
+     2. Run `pnpm run db:reset` (a backup will be made automatically).
+
+This workflow provides a balance casualties of simplicity for initial setup and a controlled way to apply ad-hoc changes, backed by automatic backups for a safety net during development. For production environments or complex, multi-developer schema evolution, a fully versioned migration system would be the next step.
 
 ### Running Locally
 
@@ -424,7 +583,3 @@ jobs:
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [BetterSQLite3 Documentation](https://github.com/WiseLibs/better-sqlite3)
 - [pnpm Documentation](https://pnpm.io/motivation)
-
-```
-
-```
