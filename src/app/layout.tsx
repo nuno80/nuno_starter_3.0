@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fantavega App", // O il titolo che preferisci
-  description: "Fantacalcio Auction System", // O la descrizione che preferisci
+  title: "my-new-app", // O il titolo che preferisci
+  description: "my-new-app to solve problems", // O la descrizione che preferisci
 };
 
 export default function RootLayout({
