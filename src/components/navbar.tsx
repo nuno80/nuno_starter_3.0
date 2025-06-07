@@ -58,9 +58,6 @@ export function Navbar() {
               Home
             </Link>
 
-            {/* Rimuovo Features, Pricing, About per ora, dato che non sono nel fantacalcio_UI_pages.md */}
-            {/* Puoi aggiungerli di nuovo se servono */}
-            {/* 
             <Link
               href="/features"
               className="text-sm font-medium transition-colors hover:text-primary"
@@ -191,7 +188,6 @@ export function Navbar() {
                 </Link>
               )}
             </SignedIn>
-            {/* Rimuovo Features, Pricing, About dal menu mobile per coerenza */}
           </div>
         </div>
       )}
