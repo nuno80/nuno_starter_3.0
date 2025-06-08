@@ -1,14 +1,17 @@
 // types/globals.d.ts
-
-export {}; // Questa riga è importante!
-
-// Crea un tipo per i ruoli (assicurati che corrisponda ai tuoi ruoli reali)
-export type Roles = "admin" | "moderator"; // O solo 'admin' se usi solo quello per ora
+export {};
+export type AppRole = "admin" | "manager";
 
 declare global {
   interface CustomJwtSessionClaims {
-    metadata: {
-      role?: Roles; // La proprietà 'role' è definita qui come opzionale
+    metadata?: {
+      // Per sessioni browser standard
+      role?: AppRole;
     };
+    publicMetadata?: {
+      // Per token JWT da template
+      role?: AppRole;
+    };
+   
   }
 }
