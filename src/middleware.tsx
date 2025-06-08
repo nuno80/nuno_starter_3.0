@@ -1,85 +1,133 @@
-// middleware.ts (o src/middleware.ts)
+// src/middleware.ts
 import { NextResponse } from "next/server";
 
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// Definisci le rotte che devono essere sempre accessibili, anche senza autenticazione
+type AppRole = "admin" | "manager";
+
 const isPublicRoute = createRouteMatcher([
+  //aggiungi qui la lista aggiornata delle pagine pubbliche
   "/",
-  "/about", // Assumendo che tu abbia questa pagina
+  "/about",
   "/pricing",
   "/devi-autenticarti",
   "/no-access",
   "/sign-in(.*)",
   "/sign-up(.*)",
-  "/api/webhooks(.*)", // Esempio: le webhook di Clerk dovrebbero essere pubbliche
+  "/api/webhooks(.*)",
 ]);
 
-// Definisci le rotte che richiedono il ruolo 'admin'
 const isAdminRoute = createRouteMatcher([
-  "/dashboard(.*)", // Mantieni se usi /dashboard per admin
-  "/admin(.*)", // Protegge /admin, /admin/users, ecc.
-  "/api/admin(.*)", // Protegge /api/admin/get-users, /api/admin/set-user-role, ecc.
+  //aggiungi qui le pagine accessibili solo agli admin
+  "/admin(.*)",
+  "/dashboard(.*)",
+  "/api/admin/(.*)",
 ]);
-
-// Definisci le rotte che richiedono semplicemente l'autenticazione
 const isAuthenticatedRoute = createRouteMatcher(["/features(.*)"]);
+//aggiungi qui le pagine accessibili solo agli utenti registrati
 
 export default clerkMiddleware(async (auth, req) => {
-  // --- CORREZIONE CHIAVE: Aggiungi 'await' qui ---
   const { userId, sessionClaims } = await auth();
-  // ---------------------------------------------
 
-  // 1. Se la rotta è pubblica, permetti l'accesso
+  // Per debug, puoi decommentare le seguenti righe per vedere i log
+  //console.log("\n--- CLERK MIDDLEWARE DEBUG ---");
+  //console.log(`[REQ] ${req.method} ${req.url}`);
+  //console.log(`[AUTH] User ID: ${userId}`);
+
+
   if (isPublicRoute(req)) {
-    return NextResponse.next(); // Permetti l'accesso alla rotta pubblica
+    console.log(`[DECISION] Public route. Allowing for ${req.url}.`);
+    return NextResponse.next();
   }
 
-  // 2. Se l'utente non è autenticato, reindirizza a /devi-autenticarti
   if (!userId) {
-    // Per le rotte che richiedono autenticazione, reindirizza a una pagina personalizzata
-    if (isAuthenticatedRoute(req)) {
-      const authRequiredUrl = new URL("/devi-autenticarti", req.url);
-      console.log(
-        `Redirecting unauthenticated user from ${req.url} to ${authRequiredUrl.toString()}`
-      );
-      return NextResponse.redirect(authRequiredUrl);
+    console.log("[DECISION] User not authenticated.");
+    if (req.url.startsWith("/api")) {
+      console.log("[ACTION] Returning 401 for API request.");
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    const signInUrl = new URL("/sign-in", req.url);
+    signInUrl.searchParams.set(
+      "redirect_url",
+      req.nextUrl.pathname + req.nextUrl.search
+    );
+    console.log(`[ACTION] Redirecting to sign-in: ${signInUrl.toString()}`);
+    return NextResponse.redirect(signInUrl);
+  }
+
+  console.log(`[AUTH] User ${userId} is authenticated.`);
+
+  if (isAdminRoute(req)) {
+    console.log(
+      `[ROUTE] Admin route matched for ${req.url}. Checking admin role for user ${userId}.`
+    );
+
+    let userIsAdmin = false;
+    let roleSource = "none";
+
+    if (sessionClaims) {
+      if (sessionClaims.metadata?.role === "admin") {
+        userIsAdmin = true;
+        roleSource = "sessionClaims.metadata.role";
+      } else if (sessionClaims.publicMetadata?.role === "admin") {
+        userIsAdmin = true;
+        roleSource = "sessionClaims.publicMetadata.role (camelCase)";
+      } else {
+        const snakeCasePublicMeta = sessionClaims["public_metadata"] as
+          | { role?: AppRole }
+          | undefined;
+        if (snakeCasePublicMeta?.role === "admin") {
+          userIsAdmin = true;
+          roleSource = "sessionClaims['public_metadata'].role (snake_case)";
+        }
+      }
     }
 
-    // Per altre rotte non pubbliche, lascia che Clerk gestisca la redirezione
     console.log(
-      `Unauthenticated user trying to access ${req.url}. Redirecting via Clerk.`
+      `[AUTH] Role source for admin check: ${roleSource}. Role found: ${userIsAdmin ? "admin" : "not admin or not found"}`
     );
-  }
+    console.log(`[AUTH] Result of userIsAdmin check: ${userIsAdmin}`);
 
-  // 3. Gestione specifica per la rotta /dashboard (Admin)
-  if (isAdminRoute(req)) {
-    // Se l'utente non è autenticato O non ha il ruolo 'admin', reindirizza a /no-access
-    if (!userId || sessionClaims?.metadata.role !== "admin") {
+    if (userIsAdmin) {
+      console.log("[DECISION] Admin access GRANTED.");
+      return NextResponse.next();
+    } else {
+      console.log("[DECISION] Admin access DENIED. User is not admin.");
+      if (req.url.startsWith("/api")) {
+        console.log("[ACTION] Returning 403 for API admin request.");
+        return new NextResponse(
+          JSON.stringify({ error: "Forbidden: Admin role required" }),
+          {
+            status: 403,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      }
       const noAccessUrl = new URL("/no-access", req.url);
-      console.log(
-        `Redirecting non-admin/unauthenticated user from ${req.url} to ${noAccessUrl.toString()}`
-      ); // Log per debug
+      console.log("[ACTION] Redirecting to /no-access.");
       return NextResponse.redirect(noAccessUrl);
     }
-    // Se arriva qui, l'utente è loggato ed è admin. Accesso consentito.
   }
 
-  // 4. Per tutte le altre rotte protette:
-  // Se il codice arriva qui, significa che:
-  // - La rotta non è pubblica.
-  // - L'utente è autenticato (userId esiste, altrimenti sarebbe stato gestito sopra).
-  // - La rotta non è /dashboard o l'utente è admin.
-  // Quindi, permetti l'accesso.
+  if (isAuthenticatedRoute(req)) {
+    console.log(
+      `[ROUTE] Authenticated (non-admin) route matched for ${req.url}. Access GRANTED for user ${userId}.`
+    );
+    return NextResponse.next();
+  }
+
+  console.log(
+    `[ROUTE] Unspecified protected route for ${req.url}. Allowing access for authenticated user ${userId}.`
+  );
   return NextResponse.next();
 });
 
 export const config = {
   matcher: [
-    // Esclude le rotte interne di Next.js e i file statici,
-    // a meno che non siano trovati nei parametri di ricerca
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Esegui sempre per le rotte API e trpc
     "/(api|trpc)(.*)",
   ],
 };
