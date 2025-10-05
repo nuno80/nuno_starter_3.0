@@ -1,68 +1,166 @@
 import { Navbar } from "@/components/navbar";
+import { Button } from "@/components/ui/button";
 
-export default function FeaturesPage() {
+export default function Features() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="container py-10 text-center">
-        <h1 className="text-4xl font-bold">Features</h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-          Discover all the powerful features our platform has to offer.
-        </p>
+      <main className="container py-10">
+        <h1 className="mb-8 text-center text-4xl font-bold text-cyan-color">
+          I Nostri Servizi
+        </h1>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {/* Feature 1 */}
-          <div className="rounded-lg border p-6 text-left">
-            <h3 className="text-xl font-bold">Responsive Design</h3>
-            <p className="mt-2 text-muted-foreground">
-              Our platform automatically adapts to any device, providing an
-              optimal experience on desktop, tablet, and mobile.
-            </p>
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-12 text-center text-lg text-black">
+            Siamo a tua disposizione per rispondere a qualsiasi esigenza, in
+            modo rapido e professionale. In particolare ci occupiamo della
+            fornitura di: Hostess, Steward, Modelle, Modelli, Tour Leader e
+            Promoter in occasione di:
+          </p>
+
+          <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
+              <img
+                src="/images/Swan-Agency-steward_hostess_0.jpg"
+                alt="Fiere e Congressi"
+                className="h-48 w-full object-cover"
+              />
+              <div className="p-6">
+                <h3 className="mb-4 text-xl font-bold text-cyan-color">
+                  FIERE, MEETING AZIENDALI, CONVENTION, INTERPRETARIATO
+                  FIERISTICO
+                </h3>
+                <p className="mb-4 text-black">
+                  Personale qualificato per l&#39;accoglienza e l&#39;assistenza
+                  durante fiere, con particolare attenzione
+                  all&#39;interpretariato e alla gestione delle comunicazioni.
+                </p>
+                <div className="text-center">
+                  <Button className="bg-cyan-color text-teal-color hover:bg-cyan-600">
+                    Richiedi Informazioni
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
+              <img
+                src="/images/Swan-Agency-steward_lancio-prodotti.jpg"
+                alt="Lancio Prodotti"
+                className="h-48 w-full object-cover"
+              />
+              <div className="p-6">
+                <h3 className="mb-4 text-xl font-bold text-cyan-color">
+                  LANCIO DI PRODOTTI, TOUR PROMOZIONALI, ROADSHOW, SAMPLING,
+                  DISTRIBUZIONE GADGET
+                </h3>
+                <p className="mb-4 text-black">
+                  Promoter specializzati nel presentare nuovi prodotti, con
+                  focus sull&#39;interazione diretta con il pubblico e la
+                  distribuzione di campioni e gadget.
+                </p>
+                <div className="text-center">
+                  <Button className="bg-cyan-color text-teal-color hover:bg-cyan-600">
+                    Richiedi Informazioni
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
+              <img
+                src="/images/Swan-Agency-steward_hostess_03.jpg"
+                alt="Sfilate e Shooting"
+                className="h-48 w-full object-cover"
+              />
+              <div className="p-6">
+                <h3 className="mb-4 text-xl font-bold text-cyan-color">
+                  SFILATE, SHOWROOM, FITTING, SHOOTING FOTOGRAFICI, SPOT
+                  PUBBLICITARI
+                </h3>
+                <p className="mb-4 text-black">
+                  Modelli e modelle selezionati per sfilate, showroom e sessioni
+                  fotografiche, con attenzione all&#39;eleganza e alla
+                  professionalit&#224;.
+                </p>
+                <div className="text-center">
+                  <Button className="bg-cyan-color text-teal-color hover:bg-cyan-600">
+                    Richiedi Informazioni
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
+              <img
+                src="/images/Swan-Agency-steward_congressi.jpg"
+                alt="Congressi"
+                className="h-48 w-full object-cover"
+              />
+              <div className="p-6">
+                <h3 className="mb-4 text-xl font-bold text-cyan-color">
+                  CONGRESSI, CONFERENZE, ECM, ATTIVITÀ PROMOZIONALI
+                </h3>
+                <p className="mb-4 text-black">
+                  Hostess e steward per la gestione di congressi e conferenze,
+                  con supporto logistico e accoglienza professionale per i
+                  partecipanti.
+                </p>
+                <div className="text-center">
+                  <Button className="bg-cyan-color text-teal-color hover:bg-cyan-600">
+                    Richiedi Informazioni
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Feature 2 */}
-          <div className="rounded-lg border p-6 text-left">
-            <h3 className="text-xl font-bold">Dark Mode</h3>
-            <p className="mt-2 text-muted-foreground">
-              Switch between light and dark themes to reduce eye strain and
-              improve readability in different lighting conditions.
-            </p>
-          </div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
+              <img
+                src="/images/Swan-Agency-steward_hostess_02.jpg"
+                alt="Premiazioni"
+                className="h-48 w-full object-cover"
+              />
+              <div className="p-6">
+                <h3 className="mb-4 text-xl font-bold text-cyan-color">
+                  PREMIAZIONI, CENE DI GALA, INAUGURAZIONI
+                </h3>
+                <p className="mb-4 text-black">
+                  Personale selezionato per eventi speciali come premiazioni,
+                  cene di gala e inaugurazioni, con attenzione all&#39;eleganza
+                  e alla professionalit&#224;.
+                </p>
+                <div className="text-center">
+                  <Button className="bg-cyan-color text-teal-color hover:bg-cyan-600">
+                    Richiedi Informazioni
+                  </Button>
+                </div>
+              </div>
+            </div>
 
-          {/* Feature 3 */}
-          <div className="rounded-lg border p-6 text-left">
-            <h3 className="text-xl font-bold">Fast Performance</h3>
-            <p className="mt-2 text-muted-foreground">
-              Optimized for speed with next-generation technologies to ensure
-              your experience is always smooth and responsive.
-            </p>
-          </div>
-
-          {/* Feature 4 */}
-          <div className="rounded-lg border p-6 text-left">
-            <h3 className="text-xl font-bold">Accessibility</h3>
-            <p className="mt-2 text-muted-foreground">
-              Built with accessibility in mind, ensuring everyone can use our
-              platform regardless of abilities.
-            </p>
-          </div>
-
-          {/* Feature 5 */}
-          <div className="rounded-lg border p-6 text-left">
-            <h3 className="text-xl font-bold">Customization</h3>
-            <p className="mt-2 text-muted-foreground">
-              Tailor the interface to your preferences with extensive
-              customization options and settings.
-            </p>
-          </div>
-
-          {/* Feature 6 */}
-          <div className="rounded-lg border p-6 text-left">
-            <h3 className="text-xl font-bold">Regular Updates</h3>
-            <p className="mt-2 text-muted-foreground">
-              We continuously improve our platform with regular updates, new
-              features, and security enhancements.
-            </p>
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
+              <img
+                src="/images/Swan-Agency-steward_heventi_2020.jpg"
+                alt="Eventi"
+                className="h-48 w-full object-cover"
+              />
+              <div className="p-6">
+                <h3 className="mb-4 text-xl font-bold text-cyan-color">
+                  EVENTI: AZIENDALI, SPORTIVI, TEATRALI, FASHION
+                </h3>
+                <p className="mb-4 text-black">
+                  Soluzioni complete per ogni tipo di evento,
+                  dall&#39;organizzazione alla fornitura di personale
+                  specializzato per garantire il successo dell&#39;occasione.
+                </p>
+                <div className="text-center">
+                  <Button className="bg-cyan-color text-teal-color hover:bg-cyan-600">
+                    Richiedi Informazioni
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>

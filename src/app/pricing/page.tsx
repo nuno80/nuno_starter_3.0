@@ -1,122 +1,188 @@
-import { Check } from "lucide-react";
-
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 
-export default function PricingPage() {
+export default function Pricing() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="container py-10 text-center">
-        <h1 className="text-4xl font-bold">Pricing Plans</h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-          Choose the perfect plan for your needs. All plans include a 14-day
-          free trial.
-        </p>
+      <main className="container py-10">
+        <h1 className="mb-8 text-center text-4xl font-bold text-cyan-color">
+          Contattaci per un Preventivo
+        </h1>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-3">
-          {/* Basic Plan */}
-          <div className="flex flex-col rounded-lg border p-8">
-            <h3 className="text-xl font-bold">Basic</h3>
-            <div className="mt-4 text-4xl font-bold">
-              $9
-              <span className="text-lg font-normal text-muted-foreground">
-                /month
-              </span>
-            </div>
-            <p className="mt-2 text-muted-foreground">
-              Perfect for individuals and small projects.
-            </p>
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-12 text-center text-lg text-black">
+            Siamo disponibili 24/7 per aiutare la tua impresa. Compila il form
+            qui sotto per richiedere un preventivo personalizzato.
+          </p>
 
-            <ul className="mt-6 space-y-3 text-left">
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Up to 5 projects</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Basic analytics</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>24/7 support</span>
-              </li>
-            </ul>
+          <div className="rounded-lg bg-gray-50 p-8 shadow-md">
+            <form className="space-y-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="mb-1 block text-sm font-medium text-black"
+                  >
+                    Nome e Cognome (richiesto)
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                    required
+                  />
+                </div>
 
-            <Button className="mt-auto w-full">Get Started</Button>
+                <div>
+                  <label
+                    htmlFor="company"
+                    className="mb-1 block text-sm font-medium text-black"
+                  >
+                    Nome Azienda (richiesto)
+                  </label>
+                  <input
+                    type="text"
+                    id="company"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mb-1 block text-sm font-medium text-black"
+                  >
+                    E-mail (richiesto)
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="mb-1 block text-sm font-medium text-black"
+                  >
+                    Numero di telefono (richiesto)
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="city"
+                    className="mb-1 block text-sm font-medium text-black"
+                  >
+                    Città (richiesto)
+                  </label>
+                  <input
+                    type="text"
+                    id="city"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="service"
+                    className="mb-1 block text-sm font-medium text-black"
+                  >
+                    Servizio richiesto
+                  </label>
+                  <select
+                    id="service"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  >
+                    <option value="">Seleziona un servizio</option>
+                    <option value="hostess">Hostess</option>
+                    <option value="steward">Steward</option>
+                    <option value="modelle">Modelle</option>
+                    <option value="modelli">Modelli</option>
+                    <option value="promoter">Promoter</option>
+                    <option value="altro">Altro</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="mb-1 block text-sm font-medium text-black"
+                >
+                  Descrivi la tua richiesta
+                </label>
+                <textarea
+                  id="message"
+                  rows={5}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  placeholder="Fornisci tutti i dettagli necessari per il tuo evento: data, luogo, numero di persone richieste, servizi specifici, ecc."
+                ></textarea>
+              </div>
+
+              <div className="flex items-start">
+                <div className="flex h-5 items-center">
+                  <input
+                    id="privacy"
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label htmlFor="privacy" className="text-black">
+                    Ho preso visione dell&#39;informativa sulla privacy e
+                    acconsento al trattamento dei miei dati personali.
+                  </label>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <Button
+                  type="submit"
+                  className="bg-cyan-color px-8 py-3 text-lg text-teal-color hover:bg-cyan-600"
+                >
+                  Invia Richiesta
+                </Button>
+              </div>
+            </form>
           </div>
 
-          {/* Pro Plan */}
-          <div className="relative flex flex-col rounded-lg border border-primary p-8">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
-              Most Popular
+          <div className="mt-12 text-center">
+            <h2 className="mb-6 text-2xl font-bold text-cyan-color">
+              Informazioni di Contatto
+            </h2>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              <div className="rounded-lg bg-white p-6 shadow-md">
+                <h3 className="mb-2 text-xl font-semibold text-cyan-color">E-MAIL</h3>
+                <p className="text-blue-600">info@nuovaagenzia.it</p>
+              </div>
+
+              <div className="rounded-lg bg-white p-6 shadow-md">
+                <h3 className="mb-2 text-xl font-semibold text-cyan-color">TELEFONO</h3>
+                <p className="text-blue-600">+39 02 123 4567</p>
+              </div>
+
+              <div className="rounded-lg bg-white p-6 shadow-md">
+                <h3 className="mb-2 text-xl font-semibold text-cyan-color">INDIRIZZO</h3>
+                <p className="text-black">
+                  Via Roma, 10
+                  <br />
+                  20100 Milano MI
+                </p>
+              </div>
             </div>
-            <h3 className="text-xl font-bold">Pro</h3>
-            <div className="mt-4 text-4xl font-bold">
-              $19
-              <span className="text-lg font-normal text-muted-foreground">
-                /month
-              </span>
-            </div>
-            <p className="mt-2 text-muted-foreground">
-              Ideal for growing businesses and teams.
-            </p>
-
-            <ul className="mt-6 space-y-3 text-left">
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Unlimited projects</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Advanced analytics</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Priority support</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Custom integrations</span>
-              </li>
-            </ul>
-
-            <Button className="mt-auto w-full">Get Started</Button>
-          </div>
-
-          {/* Enterprise Plan */}
-          <div className="flex flex-col rounded-lg border p-8">
-            <h3 className="text-xl font-bold">Enterprise</h3>
-            <div className="mt-4 text-4xl font-bold">
-              $49
-              <span className="text-lg font-normal text-muted-foreground">
-                /month
-              </span>
-            </div>
-            <p className="mt-2 text-muted-foreground">
-              For large organizations with advanced needs.
-            </p>
-
-            <ul className="mt-6 space-y-3 text-left">
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Everything in Pro</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Dedicated account manager</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Custom SLA</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="mr-2 h-5 w-5 text-primary" />
-                <span>Advanced security features</span>
-              </li>
-            </ul>
-
-            <Button className="mt-auto w-full">Contact Sales</Button>
           </div>
         </div>
       </main>

@@ -19,8 +19,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "my-new-app", // O il titolo che preferisci
-  description: "my-new-app to solve problems", // O la descrizione che preferisci
+  title: "Nuova agenzia | Hostess, modelle e promoter.",
+  description:
+    "Siamo una giovane agenzia di Hostess, Steward, Modelle e Promoter specializzata nel servizio di accoglienza e promozione che opera a Milano e nelle principali città italiane ed europee.",
 };
 
 export default function RootLayout({
@@ -30,7 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="it" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >

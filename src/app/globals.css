@@ -66,3 +66,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom text color classes */
+.text-first-color {
+  color: #36d1c4;
+}
+
+.text-second-color {
+  color: #a0eecc;
+}
+
+.text-third-color {
+  color: #fff2be;
+}
+
+.text-fourth-color {
+  color: #f6318c;
+}
+
+.text-cyan-color {
+  color: #00eaff;
+}
+
+.text-teal-color {
+  color: #00818a;
+}
+
+/* Custom background color classes */
+.bg-cyan-color {
+  background-color: #00eaff;
+}

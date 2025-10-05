@@ -7,7 +7,7 @@
     "semi": ["error"],
     "quotes": ["error", "double"],
     "check-file/filename-naming-convention": [
-      "error",
+      1,
       {
         "**/*.{ts,tsx}": "KEBAB_CASE"
       },

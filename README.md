@@ -58,6 +58,10 @@ Get your project up and running quickly with these steps:
      - `db:backup`: Manually creates a backup.
        (See "Database Management" section for details).
 
+    - **DB path:**
+     - il comando migrate genererà il nuovo DB nominato 'database\starter_default.db'
+     - DB PATH == 'database\starter_default.db'
+
 6. **Run Development Server:**
 
    - **Local:** `pnpm run dev`
@@ -461,7 +465,6 @@ Access at `http://localhost:3000`. Ensure you've run `pnpm run db:migrate` at le
 
 ## Authentication (Clerk)
 
-(Questa sezione sembra già buona, la lascio com'era nel tuo file)
 User authentication is handled by [Clerk](https://clerk.com/).
 
 - Sign-up, sign-in, user profiles, and session management are managed by Clerk components and APIs.
@@ -484,8 +487,6 @@ Route protection is implemented via `src/middleware.ts` using `clerkMiddleware`.
 
 ## Code Quality & Formatting
 
-(Questa sezione sembra già buona)
-
 - **ESLint** and **Prettier** are configured for linting and code formatting.
 - **Naming Conventions**: Enforced by `eslint-plugin-check-file` (KEBAB_CASE for files and folders in `src`).
 - To format code:
@@ -498,13 +499,10 @@ Route protection is implemented via `src/middleware.ts` using `clerkMiddleware`.
 
 ## GitHub Workflow (CI)
 
-(Questa sezione sembra già buona e aggiornata per pnpm)
 A basic CI workflow can be set up using GitHub Actions. Create `.github/workflows/ci.yaml`:
 
-```yaml
+```
 name: CI
-# ... (contenuto YAML come l'avevi, è corretto per pnpm)
-# ... (assicurati che node-version in setup-node sia '18' o '20' per coerenza col Dockerfile)
 on: [push]
 
 jobs:
@@ -539,8 +537,6 @@ jobs:
 ```
 
 ## Using as a Starter for New Projects
-
-(Questa sezione sembra già buona)
 
 1. Create a new repository on GitHub (e.g., `my-new-project`). **Do not** initialize it with a README or other files.
 2. Clone this starter kit repository (`nuno-starter-kit-2.0`) to your local machine.
