@@ -9,6 +9,7 @@ import {
     SignedIn,
     SignedOut,
     UserButton,
+    useUser,
 } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 
@@ -19,6 +20,8 @@ import { useMobile } from "@/hooks/use-mobile";
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useMobile();
+  const { user } = useUser();
+  const isAdmin = user?.publicMetadata?.role === "admin";
 
   // Close menu when switching from mobile to desktop
   useEffect(() => {
@@ -79,12 +82,34 @@ export function Navbar() {
             >
               CONTATTI
             </Link>
+            {isAdmin && (
+              <Link
+                href={{ pathname: "/dashboard" }}
+                className="text-sm font-medium text-black transition-colors hover:text-cyan"
+              >
+                Admin Dashboard
+              </Link>
+            )}
           </div>
 
           <div className="flex items-center gap-4">
             <SignedOut>
-              <SignInButton mode="modal" />
-              <SignUpButton mode="modal" />
+              <SignInButton mode="modal">
+                <Button 
+                  variant="ghost" 
+                  className="text-sm font-medium text-black hover:text-cyan"
+                >
+                  Sign In
+                </Button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <Button 
+                  variant="ghost" 
+                  className="text-sm font-medium text-black hover:text-cyan"
+                >
+                  Sign Up
+                </Button>
+              </SignUpButton>
             </SignedOut>
             <SignedIn>
               <UserButton afterSignOutUrl="/" />
@@ -152,6 +177,33 @@ export function Navbar() {
             >
               CONTATTI
             </Link>
+            {isAdmin && (
+              <Link
+                href={{ pathname: "/dashboard" }}
+                className="text-sm font-medium text-black transition-colors hover:text-cyan"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Admin Dashboard
+              </Link>
+            )}
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-sm font-medium text-black hover:text-cyan"
+                >
+                  Sign In
+                </Button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-sm font-medium text-black hover:text-cyan"
+                >
+                  Sign Up
+                </Button>
+              </SignUpButton>
+            </SignedOut>
           </div>
         </div>
       )}
